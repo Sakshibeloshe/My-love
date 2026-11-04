@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Happy Birthday!</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600;1,800&family=Caveat:wght@500;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--red:#7a1414;--red2:#5e0d0d;--cream:#f6ecdc;--pink:#f3b6c2;--ink:#3b1111;--paper:#fbf5ea}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font-family:'DM Sans',sans-serif;background:var(--red);color:var(--cream);overflow-x:hidden;
+background-image:radial-gradient(circle,rgba(255,255,255,.22) 2px,transparent 2.5px);background-size:34px 34px}
+h1,h2{font-family:'Playfair Display',Georgia,serif;font-style:italic}
+.hand{font-family:'Caveat',cursive}
+button{font:inherit;cursor:pointer;border:0}
+button:focus-visible{outline:3px solid var(--pink);outline-offset:3px}
+.btn{background:var(--cream);color:var(--red);padding:.8rem 2rem;border-radius:99px;font-weight:500;font-size:1.05rem;box-shadow:0 5px 0 #c9b79a;transition:transform .15s}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #c9b79a}
+.screen{position:fixed;inset:0;display:none;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.screen.on{display:block}
+#hearts{position:fixed;inset:0;pointer-events:none;z-index:50;overflow:hidden}
+#hearts span{position:absolute;bottom:-30px;animation:rise linear forwards;opacity:.8}
+@keyframes rise{to{transform:translateY(-110vh) rotate(25deg);opacity:0}}
+
+/* intro */
+#intro{text-align:center;padding:2rem 1rem}
+#intro.on{display:flex}
+.cover{max-width:420px;margin:auto}
+.cover h1{font-size:clamp(2.4rem,10vw,3.4rem);line-height:1;margin:1.6rem 0 .8rem;font-weight:800}
+.cover p{font-size:1.1rem;line-height:1.5;margin-bottom:1.5rem;opacity:.92}
+.cover .btn{animation:pulse 2s infinite}
+@keyframes pulse{50%{transform:scale(1.06)}}
+/* calendar */
+.cal{position:relative;width:min(340px,90vw);margin:18px auto 0;background:#eeeae2;color:#2a2420;border-radius:6px;padding:26px 0 0;text-align:left;box-shadow:0 18px 36px rgba(0,0,0,.4);font-family:'Courier New',monospace;transform:rotate(-1deg)}
+.cal .rings{position:absolute;top:-14px;left:6%;right:6%;height:30px;background:repeating-linear-gradient(90deg,#150a0a 0 8px,transparent 8px 22px);border-radius:4px}
+.cal .mon{font-weight:700;font-size:1.35rem;padding:6px 14px 8px}
+.cal .grid{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid #8a817a}
+.cal .dh{font-size:.8rem;padding:4px 8px;border-bottom:1px solid #8a817a;border-left:1px solid #8a817a}
+.cal .dh:first-child,.cal .c:nth-child(3n+4){border-left:0}
+.cal .c{position:relative;height:128px;border-bottom:1px solid #8a817a;border-left:1px solid #8a817a;padding:6px 8px;font-size:.85rem}
+.cal .c:nth-child(3n+4){border-left:0}
+.cal .n{font-size:.85rem}
+.cal .bday{background:#f6d3d8}
+.cal .bday .n{position:absolute;top:4px;right:6px;background:#ffd54a;padding:0 5px;font-weight:700;transform:rotate(6deg)}
+.cal .face{width:68px;height:68px;border-radius:50% 50% 8px 8px;border:3px solid #fff;margin:22px auto 4px;background:linear-gradient(135deg,#e9a0ad,#a52a3c);overflow:hidden;display:grid;place-items:center;font-size:1.6rem;position:relative}
+.cal .face img{width:100%;height:100%;object-fit:cover}
+.cal .hat{position:absolute;top:2px;left:50%;margin-left:-4px;width:0;height:0;border-left:19px solid transparent;border-right:19px solid transparent;border-bottom:44px solid #7fc8b8;transform:rotate(8deg);z-index:2;filter:drop-shadow(0 1px 0 #4d9d8c)}
+.cal .hat::after{content:"";position:absolute;top:-52px;left:-6px;width:12px;height:12px;border-radius:50%;background:#fff}
+.cal .hb{display:block;text-align:center;background:#7fc8b8;color:#fff;font-size:.68rem;padding:1px 3px;margin:0 6px;font-weight:700}
+.cal .note{font-family:'Caveat',cursive;font-size:1.15rem;line-height:1.05;transform:rotate(-6deg);margin-top:22px;text-align:center}
+.cal .cakes{font-size:2.4rem;position:absolute;right:6px;bottom:4px}
+.cal .stamp{position:absolute;left:6px;bottom:6px;width:54px;background:#5e0d0d;padding:4px;transform:rotate(-8deg);box-shadow:0 2px 4px rgba(0,0,0,.4)}
+.cal .stamp div{aspect-ratio:1;background:linear-gradient(135deg,#f3b6c2,#a52a3c);overflow:hidden;display:grid;place-items:center}
+.cal .stamp img{width:100%;height:100%;object-fit:cover}
+.cal .tiles{position:absolute;right:6px;bottom:8px;display:flex;gap:2px}
+.cal .tiles b{width:16px;text-align:center;font-family:'Caveat',cursive;font-size:1.2rem;padding:2px 0}
+.cal .star{position:absolute;color:#4fb3a5;font-size:1rem}
+
+/* home */
+.card{min-height:100vh;display:grid;place-items:center;padding:2rem 1rem}
+.bcard{background:var(--paper);color:var(--ink);width:min(380px,90vw);padding:2.2rem 1.5rem 2rem;text-align:center;border-radius:6px;position:relative;transform:rotate(-1.5deg);box-shadow:0 20px 40px rgba(0,0,0,.35);background-image:repeating-linear-gradient(90deg,transparent 0 22px,rgba(122,20,20,.06) 22px 24px)}
+.bcard::before,.bcard::after{content:"";position:absolute;width:90px;height:28px;background:rgba(243,182,194,.8);top:-12px;left:50%;margin-left:-45px;transform:rotate(3deg)}
+.bcard .party{font-size:3.4rem}
+.bcard h1{font-size:2.8rem;color:var(--red);line-height:1.05;margin:.3rem 0}
+.bcard .date{font-size:1.9rem;color:#b3394a}
+.bcard .cake{font-size:5rem;margin:.6rem 0;display:inline-block;animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-8px) rotate(4deg)}}
+.bcard p{font-size:1.5rem;line-height:1.2}
+.scrollhint{margin-top:2rem;font-size:1.7rem;color:var(--pink);animation:bob 1.6s infinite;text-align:center}
+.picks{min-height:100vh;padding:4rem 1rem;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.5rem}
+.picks h2{font-size:2.3rem}
+.icons{display:flex;gap:1.6rem;flex-wrap:wrap;justify-content:center}
+.icon{background:var(--paper);color:var(--ink);width:136px;padding:1.2rem .6rem 1rem;border-radius:6px;box-shadow:0 10px 24px rgba(0,0,0,.35);transition:transform .2s}
+.icon:nth-child(1){transform:rotate(-3deg)}.icon:nth-child(2){transform:rotate(2deg)}.icon:nth-child(3){transform:rotate(-2deg)}
+.icon:hover{transform:rotate(0) scale(1.07)}
+.icon .e{font-size:3rem;display:block}
+.icon .hand{font-size:1.5rem;color:var(--red)}
+
+/* panels */
+.panel{padding:4.5rem 1rem 3rem;text-align:center;background:var(--red2)}
+.back{position:fixed;top:14px;left:14px;z-index:20;background:var(--cream);color:var(--red);padding:.5rem 1.1rem;border-radius:99px;font-size:.95rem}
+.panel h2{font-size:2.2rem;margin-bottom:.4rem}
+.sub{opacity:.8;margin-bottom:2rem}
+
+/* letter */
+.env{position:relative;width:min(340px,88vw);height:230px;margin:2rem auto 0}
+.env .back-e{position:absolute;inset:0;background:#e8d7bb;border-radius:6px}
+.env .sheet{position:absolute;left:5%;right:5%;top:8%;height:84%;background:var(--paper);border-radius:4px;transition:transform .9s .4s,height .9s .4s;z-index:2}
+.env .front{position:absolute;inset:0;z-index:3;border-radius:6px;background:linear-gradient(135deg,transparent 49.5%,#d9c6a6 50%) left/50% 100% no-repeat,linear-gradient(225deg,transparent 49.5%,#d9c6a6 50%) right/50% 100% no-repeat;pointer-events:none}
+.env .flap{position:absolute;left:0;right:0;top:0;height:60%;background:#c9b48f;clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transition:transform .5s;z-index:4}
+.env .seal{position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);font-size:2rem;z-index:5;transition:opacity .3s}
+.env.open .flap{transform:rotateX(180deg);z-index:1}
+.env.open .seal{opacity:0}
+.env.open .sheet{transform:translateY(-190px);height:150%}
+#letterBox{display:none;max-width:480px;margin:1rem auto 0;background:var(--paper);color:var(--ink);padding:2rem 1.6rem;border-radius:4px;text-align:left;font-family:'Caveat',cursive;font-size:1.65rem;line-height:1.45;box-shadow:0 14px 30px rgba(0,0,0,.4);white-space:pre-line}
+#letterBox.show{display:block;animation:drop .8s}
+@keyframes drop{from{opacity:0;transform:translateY(-30px)}}
+
+/* photobooth */
+.strips{display:flex;gap:1.6rem;justify-content:center;flex-wrap:wrap;align-items:flex-start}
+.slot{width:165px}
+.slot .mouth{height:16px;background:#1b0808;border-radius:8px;position:relative;z-index:2;box-shadow:0 3px 0 #444}
+.slot .win{overflow:hidden;padding-bottom:10px}
+.strip{background:#fff;padding:9px 9px 26px;width:145px;margin:0 auto;box-shadow:0 8px 18px rgba(0,0,0,.45);transform:translateY(-110%);animation:print 3s cubic-bezier(.3,1,.4,1) forwards}
+.strip:nth-child(1){--r:-2deg}
+@keyframes print{to{transform:translateY(0) rotate(var(--r,1.5deg))}}
+.frame{aspect-ratio:1;margin-bottom:8px;background:linear-gradient(135deg,#d98a9a,#7a1414);display:grid;place-items:center;font-size:1.6rem;overflow:hidden;filter:sepia(.25) contrast(1.05)}
+.frame:last-of-type{margin-bottom:0}
+.frame img{width:100%;height:100%;object-fit:cover;display:block}
+.strip .cap{position:absolute}
+.strip small{display:block;margin-top:6px;color:#555;font-family:'Caveat',cursive;font-size:1.1rem;text-align:center}
+
+/* puzzle */
+#board{display:grid;gap:3px;width:min(600px,94vw);aspect-ratio:16/9;margin:0 auto;padding:6px;background:var(--paper);border-radius:6px;box-shadow:0 12px 26px rgba(0,0,0,.4)}
+.tile{background-size:300% 300%;background-color:#c96a7d;border-radius:3px;cursor:pointer;display:grid;place-items:center;color:rgba(255,255,255,.7);font-weight:500;transition:transform .15s}
+.tile.sel{outline:4px solid #ffd54a;transform:scale(.94);z-index:1}
+.won .tile{border-radius:0;cursor:default}
+#win{min-height:3rem;margin-top:1.2rem;font-size:1.8rem;color:var(--pink)}
+.row{display:flex;gap:1rem;justify-content:center;align-items:center;margin-top:1.4rem}
+
+#mus{position:fixed;top:14px;right:14px;z-index:60;background:var(--cream);color:var(--red);width:40px;height:40px;border-radius:50%;display:none;font-size:1.1rem}
+#mus.on{display:block}
+#hearts .cf{position:absolute;top:-14px;width:9px;height:14px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+.cake2{width:150px;margin:1rem auto 0;cursor:pointer}
+.cake2 .cs{display:flex;justify-content:space-around;padding:0 28px;height:34px;align-items:flex-end}
+.cake2 .cs i{width:7px;height:22px;background:#f3b6c2;position:relative;border:1px solid #b3394a}
+.cake2 .cs i::before{content:"";position:absolute;left:-3px;top:-17px;width:11px;height:16px;background:radial-gradient(#fff 15%,#ffb300 60%,#ff6a00);border-radius:50% 50% 50% 50%/60% 60% 40% 40%;animation:fk .4s infinite alternate}
+.cake2.out .cs i::before{display:none}
+@keyframes fk{to{transform:scale(.88) rotate(5deg)}}
+.cake2 .l1{height:34px;background:#f3b6c2;border-radius:8px 8px 0 0;border-bottom:5px solid #fff}
+.cake2 .l2{height:40px;background:#a52a3c;border-radius:0 0 8px 8px}
+#wish{font-size:1.5rem;color:#b3394a;margin-top:.8rem}
+.icon{position:relative}
+.icon.done::after{content:"\2713";position:absolute;top:6px;right:8px;background:#3a9d6e;color:#fff;border-radius:50%;width:24px;height:24px;line-height:24px;font-size:.9rem}
+.icon.lock{opacity:.65}
+.strip{cursor:pointer;position:relative}
+.strip .in{animation:none}
+@keyframes fl{from{transform:rotateY(90deg)}}
+.story{display:none;flex-direction:column;gap:.6rem;min-height:200px;align-items:center;justify-content:center;font-size:1.25rem;line-height:1.2;color:#7a1414;padding:6px}
+.strip.back .frame,.strip.back small{display:none}
+.strip.back .story{display:flex}
+#ow button{background:#e8d7bb;color:var(--red);padding:.5rem .9rem;border-radius:4px;margin:.3rem;font-size:.95rem}
+#owt,.note{max-width:420px;margin:1rem auto;background:var(--paper);color:var(--ink);padding:1.2rem;border-radius:4px;font-size:1.6rem;line-height:1.35;box-shadow:0 10px 24px rgba(0,0,0,.4)}
+#owt:empty{display:none}
+.jar{font-size:10rem;cursor:pointer;display:inline-block}
+.jar:active{transform:rotate(-8deg) scale(1.05)}
+.cbx{max-width:420px;margin:0 auto}
+
+.tk{display:flex;width:min(400px,94vw);margin:0 auto 1.3rem;cursor:pointer;filter:drop-shadow(0 8px 12px rgba(0,0,0,.4));color:#d9708a}
+.tk .m{flex:1;position:relative;background:#fdf3f5;padding:14px 16px 12px 40px;text-align:center;min-height:118px;display:flex;flex-direction:column;justify-content:center;
+-webkit-mask:radial-gradient(circle 9px at 0 50%,#0000 98%,#000) left/51% 100% no-repeat,radial-gradient(circle 9px at 100% 50%,#0000 98%,#000) right/51% 100% no-repeat;
+mask:radial-gradient(circle 9px at 0 50%,#0000 98%,#000) left/51% 100% no-repeat,radial-gradient(circle 9px at 100% 50%,#0000 98%,#000) right/51% 100% no-repeat}
+.tk .m::before{content:"";position:absolute;inset:7px;border:1.5px solid #f3b6c2;pointer-events:none}
+.tk .bars{position:absolute;left:14px;bottom:16px;width:18px;height:34px;background:repeating-linear-gradient(0deg,#f08c8c 0 3px,transparent 3px 5px,#b79ad6 5px 8px,transparent 8px 10px)}
+.tk .bunt{position:absolute;top:10px;left:40px;right:16px;font-size:.6rem;line-height:1;letter-spacing:.3rem;color:#f3b6c2;overflow:hidden;white-space:nowrap}
+.tk .lb{font-weight:500;letter-spacing:.25rem;font-size:.7rem;color:#e58aa0;margin-top:8px}
+.tk .tx{font-family:'Caveat',cursive;font-size:1.9rem;line-height:1.05;font-weight:700;margin-top:4px}
+.tk .stub{width:84px;background:#f3ead9;border:5px solid #f6b3c4;border-left-width:6px;padding:8px 6px;display:flex;gap:6px;justify-content:center;align-items:center;transition:transform .7s,opacity .7s;transform-origin:top left;
+-webkit-mask:radial-gradient(circle 9px at 0 50%,#0000 98%,#000);mask:radial-gradient(circle 9px at 0 50%,#0000 98%,#000)}
+.tk .code{writing-mode:vertical-rl;font:.55rem 'Courier New',monospace;color:#333;letter-spacing:.1rem}
+.tk .bc{width:30px;height:84px;background:repeating-linear-gradient(0deg,#222 0 2px,transparent 2px 4px,#222 4px 5px,transparent 5px 8px,#222 8px 11px,transparent 11px 13px)}
+.tk.used .stub{transform:translate(26px,18px) rotate(14deg);opacity:.3}
+.tk.used .m::after{content:"REDEEMED";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-10deg);border:3px solid #c0334f;color:#c0334f;padding:.1rem .6rem;font-weight:700;letter-spacing:.2rem;font-size:1.1rem;background:rgba(253,243,245,.85)}
+.tk.used .tx{opacity:.4}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.strip{transform:none}}
+</style>
+</head>
+<body>
+<div id="hearts"></div>
+<audio id="bgm" loop></audio><button id="mus" onclick="toggleMus()" aria-label="music">🎵</button>
+
+<!-- 1. Opening -->
+<section id="intro" class="screen on">
+  <div class="cover">
+    <div class="cal">
+      <div class="rings"></div>
+      <div class="mon">November</div>
+      <div class="grid">
+        <div class="dh">thursday</div><div class="dh">friday</div><div class="dh">saturday</div>
+        <div class="c"><span class="n">5</span><div class="note">it's my favorite boy's birthday!</div></div>
+        <div class="c bday"><span class="n">6</span><i class="hat"></i>
+          <div class="face"><img src="photos/puzzle.jpg" alt="" style="object-position:72% 30%" onerror="this.replaceWith('🥳')"></div>
+          <span class="hb">happy birthday!</span></div>
+        <div class="c"><span class="n">7</span><span class="cakes">🎂</span><span class="star" style="left:10px;top:40px">★</span></div>
+        <div class="c"><span class="n">12</span><div class="stamp"><div><img src="photos/lane/1-1.jpg" alt="" onerror="this.replaceWith('♡')"></div></div></div>
+        <div class="c"><span class="n">13</span><div class="note">treat on me today!</div></div>
+        <div class="c"><span class="n">14</span><div class="tiles"><b style="background:#ffd54a">2</b><b style="background:#f3b6c2">0</b><b style="background:#b8e3d9">2</b><b style="background:#ffd54a">6</b></div></div>
+      </div>
+    </div>
+    <h1>Happy Birthday</h1>
+    <p id="introText"></p>
+    <button class="btn" onclick="go('home');playMus()">Continue</button>
+  </div>
+</section>
+
+<!-- 2. Card + three icons -->
+<section id="home" class="screen">
+  <div class="card">
+    <div>
+      <div class="bcard">
+        <div class="party">🎉</div>
+        <h1>Happy Birthday,<br><span id="nm"></span>!</h1>
+        <div class="cake2" id="cake" onclick="blow()"><div class="cs"><i></i><i></i><i></i></div><div class="l1"></div><div class="l2"></div></div>
+        <div id="wish" class="hand">tap the candles, or <u onclick="event.stopPropagation();mic()">blow into your mic</u> 🎤</div>
+        <div class="date hand">6 · November</div>
+        <p class="hand">you're the best boy, and this one's just for you</p>
+      </div>
+      <div class="scrollhint hand">scroll down ↓</div>
+    </div>
+  </div>
+  <div class="picks">
+    <h2>Pick something to open</h2>
+    <div class="icons"><button class="icon" data-k="letter" onclick="go('letter')"><span class="e">💌</span><span class="hand">a letter</span></button><button class="icon" data-k="lane" onclick="go('lane')"><span class="e">📸</span><span class="hand">memory lane</span></button><button class="icon" data-k="puzzle" onclick="go('puzzle')"><span class="e">🧩</span><span class="hand">a puzzle</span></button></div>
+    <p class="hand" style="font-size:1.6rem;color:var(--pink)">a few extras</p>
+    <div class="icons"><button class="icon" data-k="reasons" onclick="go('reasons')"><span class="e">🫙</span><span class="hand">reasons</span></button><button class="icon" data-k="coupons" onclick="go('coupons')"><span class="e">🎟️</span><span class="hand">coupons</span></button></div>
+    <button class="icon lock" id="fin" onclick="finClick()"><span class="e">🔒</span><span class="hand">one last thing…</span></button>
+    <div id="finhint" class="hand"></div>
+  </div>
+</section>
+
+<!-- Letter -->
+<section id="letter" class="screen panel">
+  <button class="back" onclick="go('home',true)">‹ Back</button>
+  <h2>A letter for you</h2>
+  <p class="sub" id="lhint">Tap the envelope</p>
+  <div class="env" id="env">
+    <div class="back-e"></div><div class="sheet"></div><div class="front"></div><div class="flap"></div><div class="seal">❤️</div>
+  </div>
+  <div style="margin-top:1.6rem"><button class="btn" id="openBtn" onclick="openLetter()">Open the letter</button></div>
+  <div id="letterBox"></div><div id="ow"></div>
+</section>
+
+<!-- Photo lane -->
+<section id="lane" class="screen panel">
+  <button class="back" onclick="go('home',true)">‹ Back</button>
+  <h2>Walk down memory lane</h2>
+  <p class="sub">Our little photobooth prints. Tap a strip to flip it</p>
+  <div class="strips" id="strips"></div>
+</section>
+
+<!-- Puzzle -->
+<section id="puzzle" class="screen panel">
+  <button class="back" onclick="go('home',true)">‹ Back</button>
+  <h2>Put us back together</h2>
+  <p class="sub">Tap one piece, then another to swap them</p>
+  <div id="board"></div>
+  <div id="win" class="hand"></div>
+  <div class="row"><span id="moves">Moves: 0</span><button class="btn" onclick="shuffle()">Shuffle again</button></div>
+</section>
+
+<section id="reasons" class="screen panel"><button class="back" onclick="go('home',true)">‹ Back</button><h2>Reasons I love you</h2><div class="jar" onclick="pull()">🫙</div><div id="rnote" class="note hand">tap the jar</div></section>
+<section id="coupons" class="screen panel"><button class="back" onclick="go('home',true)">‹ Back</button><h2>Coupon book</h2><p class="sub">Tap a ticket to redeem it</p><div id="cbox" class="cbx"></div></section>
+<section id="final" class="screen panel"><button class="back" onclick="go('home',true)">‹ Back</button><h2>one last thing…</h2><div id="fmsg" class="note hand"></div></section>
+
+<script>
+/* ===== EDIT THESE ===== */
+const CFG = {
+  name: "Handsome",
+  intro: "You are the best boy, and I want to do something special for you.",
+  letter: "My dear Love,\r\n\r\nThere are days I miss you so so so much, I wish words could explain. It reminds me of this quote by this Palestinian poet Mahmud darwish-” How do I say, I miss you, in a way that will make your heart ache as much as mine”\r\nYou are everything I wished for and more. I loved you before I knew you even existed. There was a part of who would imagine my hands being held, my head on someone’s shoulder, my cheeks being caressed. As a kid I would mimic it in my room alone. I knew how it would feel, the energy, the emotion, the state of being of the person. I always knew there existed a person who would fit this mold. \r\nI knew something was about to change in our third year. I had always questioned why I chose MIT for college. I had different options, I even had COEP for mechanical. But I still chose MIT. The start of third year was very confusing for me-my parent would randomly blame me for my education, I was going through an identity crisis because Siddhi was not there with me this year, I had spent a whole summer in the Nordic’s and that had made my contemplate my life path and career a lot. I did not notice you at all during the bootcamp. But from the very first day I did notice you. \r\nYou had cherub cheeks and a very innocent boy look with a mischievous glint in your eyes. You used to walk differently. I now know the reason why, your package. But it was certainly different. You were very boisterous, had a loud presence, very boyish in the way you used to always have fun with friends. I would see how people would be fascinated by you, they would chant your names in conversations around me- conversations ranging somewhere between the threat to their manlihood and mild curiosity. But nevertheless people around me used to talk a lot. \r\nThe computers on my desk were aligned in such a way that I used to get a glimpse of you from where I sat. I used to glance at you, but I would never admit this. I would see you carry a book sometimes. But mostly I would look at the way you talked. You held a softness, a sharp intelligence and wit in the way you spoke.\r\nI now say that it was my ego that stopped me from trying to talk to you the second time but honestly it was me being afraid. I was afraid of being hurt. I felt like I understood you with so much depth even when I had never spoken to you, you ignored me when we first spoke and I was afraid of getting my heart hurt by you. I did not exactly have really good experiences with my love being reciprocated, whether family or friends, I was afraid it would be the same. So I ran back into the walls I built around me. \r\nI stopped looking at you after that. There would be rumours and I would see how girls would soften up when they were around you. I would notice and then ignore.\r\nI had built a small world around me later on. I was not close with anyone in iOS. I then slowly built my own trusted network. \r\nBut then faith may have it- you decided to penetrate it. I was wary of you because I did not want myself to be lost in you, because I knew in my gut it would happen.\r\nNow that I look back, more than anything I was scared of being loved- because to love is to see someone for who they truly are. I did not want you to see me. My flaws, my mistakes, my traits, my drawbacks. \r\nBut you, my gentle lover, the most charming man, the most humblest being, the most sweetest heart- you let yourself in.\r\nI love you with such intensity that it can burn down all existing monuments of love that exist in this world. \r\nIt is difficult to express what I feel sometimes. I want to free you, but then I want to keep you close to me. I am both liberal and possessive when it comes to you. \r\nYou my boy- my man, are smart, wise beyond your years. Have the foresight to understand what someone might feel. You have the kind of emotional intelligence that surpasses human capacity. And I mean it. I see you tackle situations and I am like damn, I need to kiss his brains out. \r\nI want to flaunt you.\r\nI love to flaunt you.\r\nI want people to ask me why do you guys do so much PDA? Why are you guys so cringe? \r\nI want people to ask me why I love you so much? \r\nWhat are you like?\r\nI will say\r\nYou are like all the love I have poured into the world finally found its way back to me, wrapped in human form, loving me without ever being asked. \r\nYou love me the way I always wanted to be loved. You love me more than my parents ever did. You have spoiled me for everyone. I can never receive love and not compare it to you. And still you will surpass all. Your love is truth for me-to say the last.\r\nI existed before you. I live after you.\r\nI like to hear my name being called with yours. \r\nAusaf’s Sakshi. \r\nIt brings me pride.\r\nUnconditional.\r\nThat is what my emotions are for you. No matter what the situation, the time, the place, the year: my feelings for you are unconditional.\r\nMy heart is full of you, I can hardly call it my own.\r\nIn every universe, I would love to come home to you. You are my home.\r\nYou say my name and it brings warmth in my chest, your voice will always be my favorite sound.\r\nTo be seen is to be loved. You see me in ways I could never fathom. You know what I am about to say before I say it. You have seen me talk, cry, dance, pee. You know what I am about to do before I do it. You know when I am anxious from one look, You know when I am going to kiss you from one look, and just from my presence you know when I will be poking your starfish.\r\nMy love, you have seen me in ways no one ever has.\r\nAnd to tell you something, I am not afraid of the future. Because as long as I am with you, I will be good. My face will have a smile, my heart will be warm. \r\nI promise to take care of you. For all my life. I will be with you, through sickness and through health. Sometimes I will do things to upset you. I am already warning you, I am a bad person. But no matter what, I will be there for you. Whatever time I have, I want to spend it with you. Whatever luxuries I have, I want to give those to you. I want nothing in this world to ever lay its hands on you. \r\nIf I could, I could take away all sickness and problems for me and give you all my love and blessings.\r\nAlso that reminds me. There is no until death does us apart. I am going to be with you even after death. My ashes will be strewn across your qabr. \r\nWhen death stands beside me, asking for my hand. I would wish for your glance to be the last thing engraved on my Retina. For that, my love, would be heaven. Thank you for loving me, even when I am still learning how to, you are my everything.\r\n\r\nHappy birthday my love.\r\nI wish you the most wonderful and prosperous life I can. I wish you all the love, luxuries and blessings. I wish you get what you wish for and more. And I wish for you to be loved in the best way possible by me-which I will.",
+  puzzleImg: "photos/puzzle.jpg",
+  puzzleWin: "Together, just like this ♡",
+  lanes: [
+  {
+   "title": "Our first day as a couple",
+   "imgs": [
+    "photos/lane/1-1.jpg",
+    "photos/lane/1-2.jpg",
+    "photos/lane/1-3.jpg",
+    "photos/lane/1-4.jpg",
+    "photos/lane/1-5.jpg"
+   ]
+  },
+  {
+   "title": "Best 1 month ever, best honeymoon",
+   "imgs": [
+    "photos/lane/2-1.jpg",
+    "photos/lane/2-2.jpg",
+    "photos/lane/2-3.jpg",
+    "photos/lane/2-4.jpg",
+    "photos/lane/2-5.jpg"
+   ]
+  },
+  {
+   "title": "First time you got angry with me",
+   "imgs": [
+    "photos/lane/3-1.jpg",
+    "photos/lane/3-2.jpg",
+    "photos/lane/3-3.jpg",
+    "photos/lane/3-4.jpg",
+    "photos/lane/3-5.jpg",
+    "photos/lane/3-6.jpg"
+   ]
+  },
+  {
+   "title": "First vacation spent apart, you looked so pretty in every pic",
+   "imgs": [
+    "photos/lane/4-1.jpg",
+    "photos/lane/4-2.jpg",
+    "photos/lane/4-3.jpg",
+    "photos/lane/4-4.jpg",
+    "photos/lane/4-5.jpg",
+    "photos/lane/4-6.jpg"
+   ]
+  },
+  {
+   "title": "Deep talk and scenery",
+   "imgs": [
+    "photos/lane/5-1.jpg",
+    "photos/lane/5-2.jpg",
+    "photos/lane/5-3.jpg",
+    "photos/lane/5-4.jpg"
+   ]
+  }
+],   // add "story" to any lane to show it on the back of the strip
+  music: "music.mp3",                // put your song file next to index.html
+  openWhen: [
+    {t:"Open when you're sad",m:"Write something comforting here. I'm always one call away."},
+    {t:"Open when you miss me",m:"Look at the last photo we took and know I'm missing you too."},
+    {t:"Open when you need a laugh",m:"Remember that time we... (add your inside joke!)"}],
+  reasons: ["Your laugh","The way you look at me","You make ordinary days feel special","Your hugs","You believe in me"],
+  coupons: ["You pick the movie 🎬","Breakfast in bed 🥞","One dinner on me 🍝","A long cuddle, no phones 💞"],
+  final: "You will always be mine, I love you the more, more than anything in this world. My love is rare, my lover rarer"
+};
+/* ====================== */
+const $=id=>document.getElementById(id);
+$('nm').textContent=CFG.name; $('introText').textContent=CFG.intro;
+
+const done=new Set();
+function go(id,keep){
+  document.querySelectorAll('.screen').forEach(x=>x.classList.remove('on'));
+  $(id).classList.add('on'); $(id).scrollTop=0;
+  ({lane:buildLane,puzzle:shuffle,letter:resetLetter,coupons:buildCoupons,reasons:()=>{ri=0;$('rnote').textContent='tap the jar'},final:finalShow}[id]||(()=>{}))();
+  if(document.querySelector('.icon[data-k="'+id+'"]')){
+    done.add(id);
+    document.querySelectorAll('.icon[data-k]').forEach(b=>b.classList.toggle('done',done.has(b.dataset.k)));
+    if(['letter','lane','puzzle'].every(k=>done.has(k))){$('fin').classList.remove('lock');$('fin').querySelector('.e').textContent='🎁';$('finhint').textContent=''}
+  }
+  if(id==='home'&&keep)$('home').scrollTop=window.innerHeight;
+  if(id!=='final')burst();
+}
+function finClick(){
+  if($('fin').classList.contains('lock'))$('finhint').textContent='Open the letter, memory lane and puzzle first 💌';
+  else go('final');
+}
+function finalShow(){$('fmsg').textContent='';setTimeout(()=>{confetti();typeText($('fmsg'),CFG.final,55)},1200)}
+
+/* music */
+function playMus(){const m=$('bgm');if(!m.src)m.src=CFG.music;m.play().then(()=>$('mus').classList.add('on')).catch(()=>{})}
+function toggleMus(){const m=$('bgm');m.paused?m.play():m.pause();$('mus').textContent=m.paused?'🔇':'🎵'}
+
+/* confetti + typing */
+function confetti(){for(let i=0;i<70;i++){const c=document.createElement('i');c.className='cf';
+  c.style.cssText=`left:${Math.random()*100}%;background:${['#f3b6c2','#ffd54a','#7fc8b8','#fff','#e5566d'][i%5]};animation-duration:${2+Math.random()*2}s;animation-delay:${Math.random()*.4}s`;
+  $('hearts').appendChild(c);setTimeout(()=>c.remove(),4600)}}
+let tt;
+function typeText(el,t,ms,cb){clearTimeout(tt);el.textContent='';let i=0;
+  (function n(){el.textContent=t.slice(0,++i);if(i<t.length)tt=setTimeout(n,ms);else if(cb)cb()})()}
+
+/* candles */
+function blow(){const c=$('cake');if(c.classList.contains('out'))return;c.classList.add('out');$('wish').textContent='make a wish… ✨';confetti()}
+async function mic(){
+  try{const st=await navigator.mediaDevices.getUserMedia({audio:true}),ac=new AudioContext(),an=ac.createAnalyser(),d=new Uint8Array(an.fftSize);
+    ac.createMediaStreamSource(st).connect(an);$('wish').textContent='now blow! 🎤';
+    const t=setInterval(()=>{an.getByteTimeDomainData(d);let m=0;d.forEach(v=>m=Math.max(m,Math.abs(v-128)));
+      if(m>60){clearInterval(t);st.getTracks().forEach(x=>x.stop());blow()}},100)}
+  catch(e){$('wish').textContent='mic not available, just tap the candles!'}
+}
+
+/* floating hearts */
+function burst(n=10){for(let i=0;i<n;i++)setTimeout(heart,i*80)}
+function heart(){
+  const h=document.createElement('span');
+  h.textContent=['❤','♡','💖','🌸'][Math.random()*4|0];
+  h.style.left=Math.random()*100+'%';
+  h.style.fontSize=(14+Math.random()*22)+'px';
+  h.style.color='#f3b6c2';
+  h.style.animationDuration=(4+Math.random()*4)+'s';
+  $('hearts').appendChild(h); setTimeout(()=>h.remove(),8500);
+}
+setInterval(heart,1200);
+
+/* letter */
+function resetLetter(){
+  $('env').classList.remove('open'); $('letterBox').classList.remove('show');
+  $('openBtn').style.display=''; $('lhint').textContent='Tap the button to open it';$('letterBox').textContent='';$('ow').innerHTML='';clearTimeout(tt);
+  $('env').style.display='';
+}
+function openLetter(){
+  $('env').classList.add('open'); $('openBtn').style.display='none';
+  $('lhint').textContent='';
+  setTimeout(()=>{$('env').style.display='none';
+    $('letterBox').classList.add('show');confetti();typeText($('letterBox'),CFG.letter,35,showOW)},1500);
+}
+
+function showOW(){
+  $('ow').innerHTML='<p class="hand" style="font-size:1.6rem;margin-top:1.5rem">…and a few “open when” notes ✉️</p>'+CFG.openWhen.map((o,i)=>`<button onclick="typeText($('owt'),CFG.openWhen[${i}].m,30)">${o.t}</button>`).join('')+'<div id="owt"></div>';
+}
+/* photobooth */
+function buildLane(){
+  const c=$('strips'); c.innerHTML='';
+  CFG.lanes.forEach((L,s)=>{
+    const slot=document.createElement('div'); slot.className='slot';
+    const f=L.imgs.map(src=>`<div class="frame"><img src="${src}" alt="" onerror="this.replaceWith('♡')"></div>`).join('');
+    slot.innerHTML=`<div class="mouth"></div><div class="win"><div class="strip" style="animation-delay:${s*.9}s" onclick="flip(this)"><div class="in">${f}<small>${L.title}</small><div class="story hand"><b style="font-size:1.5rem">${L.title}</b><span>${L.story||''}</span></div></div></div></div>`;
+    c.appendChild(slot);
+  });
+}
+function flip(el){
+  const i=el.firstChild,h=el.offsetHeight-40;
+  el.classList.toggle('back'); i.querySelector('.story').style.minHeight=h+'px';
+  i.style.animation='none'; void i.offsetWidth; i.style.animation='fl .5s';
+}
+
+/* puzzle: landscape 4x3 swap */
+const COLS=4,ROWS=3; let order=[],sel=-1,moves=0;
+function shuffle(){
+  do{order=[...Array(COLS*ROWS).keys()].sort(()=>Math.random()-.5)}while(order.every((v,i)=>v===i));
+  sel=-1;moves=0;$('win').textContent='';$('board').classList.remove('won');draw();
+}
+function draw(){
+  const b=$('board'); b.style.gridTemplateColumns=`repeat(${COLS},1fr)`; b.style.gridTemplateRows=`repeat(${ROWS},1fr)`; b.innerHTML='';
+  const won=order.every((v,i)=>v===i);
+  order.forEach((p,i)=>{
+    const t=document.createElement('div'); t.className='tile'+(i===sel?' sel':'');
+    const x=p%COLS,y=p/COLS|0;
+    t.style.backgroundImage=`url("${CFG.puzzleImg}")`;
+    t.style.backgroundSize=`${COLS*100}% ${ROWS*100}%`;
+    t.style.backgroundPosition=`${x*100/(COLS-1)}% ${y*100/(ROWS-1)}%`;
+    t.textContent=won?'':p+1;
+    if(!won)t.onclick=()=>pick(i);
+    b.appendChild(t);
+  });
+  $('moves').textContent='Moves: '+moves;
+  if(won){b.classList.add('won');$('win').textContent=CFG.puzzleWin;confetti()}
+}
+function pick(i){
+  if(sel<0){sel=i}else{
+    if(sel!==i){[order[sel],order[i]]=[order[i],order[sel]];moves++}
+    sel=-1;
+  }
+  draw();
+}
+let ri=0;
+/* reasons + coupons */
+function pull(){const n=$('rnote');n.textContent='#'+(ri+1)+'  '+CFG.reasons[ri++%CFG.reasons.length];
+  n.animate([{transform:'translateY(-30px) rotate(-4deg)',opacity:0},{transform:'none',opacity:1}],400);burst(6)}
+function buildCoupons(){$('cbox').innerHTML=CFG.coupons.map((c,i)=>`<div class="tk" onclick="if(!this.classList.contains('used')){this.classList.add('used');confetti()}"><div class="m"><i class="bars"></i><div class="bunt">▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼</div><div class="lb">ADMIT ONE ♡</div><div class="tx">${c}</div></div><div class="stub"><div class="code">LOVE-${String(i+1).padStart(4,'0')}-6NOV</div><div class="bc"></div></div></div>`).join('')}
+</script>
+</body>
+</html>
